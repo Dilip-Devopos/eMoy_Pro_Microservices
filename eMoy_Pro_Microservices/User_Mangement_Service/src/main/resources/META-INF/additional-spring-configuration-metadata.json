@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "spring.cloud.gateway.globalcors.add-to-simple-url-handler-mapping",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.cloud.gateway.globalcors.add-to-simple-url-handler-mapping'"
+  },
+  {
+    "name": "spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedMethods",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedMethods'"
+  },
+  {
+    "name": "spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedOrigins",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedOrigins'"
+  },
+  {
+    "name": "spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedMethods",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedMethods'"
+  },
+  {
+    "name": "spring.cloud.gateway.globalcors.cors-configurations.[/**].allowCredentials",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.cloud.gateway.globalcors.cors-configurations.[/**].allowCredentials'"
+  }
+]}

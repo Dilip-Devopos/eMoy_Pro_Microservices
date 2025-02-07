@@ -85,7 +85,7 @@ pipeline {
 
         stage('Build and Push Docker Image') {
             environment {
-                DOCKER_IMAGE = "kdilipkumar/docker-agent:v1"
+                DOCKER_IMAGE = "kdilipkumar/api_gateway_service:v1"
                 DOCKERFILE_LOCATION = "eMoy_Pro_Microservices/eMoy_Pro_Microservices/API_Gateway/Dockerfile"
                 REGISTRY_CREDENTIALS = credentials('docker-cred')
             }

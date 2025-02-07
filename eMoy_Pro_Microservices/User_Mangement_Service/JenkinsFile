@@ -1,0 +1,129 @@
+pipeline {
+    agent {
+        docker {
+            image 'kdilipkumar/jenkins-agent:v18'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    environment {
+        DOCKER_IMAGE = "kdilipkumar/User_Mangement_Service:v1"
+    }
+    
+    stages {
+        stage('Cleanup') {
+            steps {
+                sh 'rm -rf eMoy_Pro_Microservices || true'
+            }
+        }
+
+        stage('Checkout Repository') {
+            steps {
+                sh '''
+                    echo "Cloning repository..."
+                    git clone https://github.com/Dilip-Devopos/eMoy_Pro_Microservices.git
+                '''
+            }
+        }
+
+        stage('Setup & Build Web') {
+            steps {
+                sh 'cd eMoy_Pro_Microservices/eMoy_Pro_Microservices/User_Mangement_Service && mvn clean package'
+            }
+        }
+
+        stage('Archive Build Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'eMoy_Pro_Microservices/eMoy_Pro_Microservices/User_Mangement_Service/target/*.war', fingerprint: true
+            }   
+        }
+
+        stage('Static Code Analysis') {
+            environment {
+                SONAR_URL = "http://192.168.0.180:9000"
+            }
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+                    sh ''' 
+                        cd eMoy_Pro_Microservices/eMoy_Pro_Microservices/User_Mangement_Service
+                        mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}
+                    '''
+                }
+            }
+        }
+
+        stage('Download Latest Artifact and Verify') {
+            steps {
+                script {
+                    sh '''
+                        # Define source and destination paths
+                        WAR_FILE=$(ls -t eMoy_Pro_Microservices/eMoy_Pro_Microservices/User_Mangement_Service/target/*.war | head -n 1)
+                        
+                        # Copy the WAR file to the required location
+                        cp "$WAR_FILE" /home/jenkins/download_artifact
+
+                        # List files to verify the copy operation
+                        ls /home/jenkins/download_artifact
+                    '''
+                }
+            }
+        }
+
+        stage('OWASP Dependency-Check Vulnerabilities') {
+            steps {
+                script {
+                    sh '''
+                        /opt/dependency-check/bin/dependency-check.sh \
+                        --project "API Gateway" \
+                        --scan /home/jenkins/download_artifact/*.war \
+                        --out dependency-check-reports \
+                        --format "XML"
+                    '''
+                    sh 'chown -R jenkins:jenkins dependency-check-reports'
+                    sh 'chmod 644 dependency-check-reports/*.xml'
+                    sh 'ls -la dependency-check-reports'
+                }
+                dependencyCheckPublisher pattern: 'dependency-check-reports/*.xml'
+            }
+        }
+
+        stage('Build Docker Image') {
+            environment {
+                DOCKERFILE_LOCATION = "eMoy_Pro_Microservices/eMoy_Pro_Microservices/User_Mangement_Service/Dockerfile"
+            }
+            steps {
+                script {
+                    sh 'cd eMoy_Pro_Microservices/eMoy_Pro_Microservices/User_Mangement_Service && docker build -t ${DOCKER_IMAGE} .'
+                }
+            }
+        }
+
+        stage('Security Scan with Trivy') {
+            steps {
+                script {
+                    sh '''
+                        echo "Running Trivy vulnerability scan..."
+                        trivy --version
+                        trivy image --severity HIGH,CRITICAL ${DOCKER_IMAGE}
+                    '''
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            environment {
+                REGISTRY_CREDENTIALS = credentials('docker-cred')
+            }
+            steps {
+                script {
+                    def dockerImage = docker.image("${DOCKER_IMAGE}")
+                    docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+
+    }
+
+}

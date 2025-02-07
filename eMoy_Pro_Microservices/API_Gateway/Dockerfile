@@ -1,13 +1,16 @@
-# You can change this base image to anything else
-# But make sure to use the correct version of Java
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM tomcat:9-jdk11
 
-# Simply the artifact path
-ARG artifact=target/API_Gateway-0.0.1-SNAPSHOT.war
+# Define the artifact path correctly for Windows
+ARG artifact=/target/API_Gateway-0.0.1-SNAPSHOT.war
 
-WORKDIR /opt
+# Set working directory
+WORKDIR /usr/local/tomcat/webapps/
 
-COPY ${artifact} app.war
+# Copy WAR file from the local machine to the Tomcat webapps directory
+COPY ${artifact} ROOT.war
 
-# This should not be changed
-ENTRYPOINT ["java","-jar","-war","app.war"]
+# Expose both Tomcat and the Java application ports
+EXPOSE 8080 8765
+
+# Start Tomcat
+CMD ["catalina.sh", "run"]

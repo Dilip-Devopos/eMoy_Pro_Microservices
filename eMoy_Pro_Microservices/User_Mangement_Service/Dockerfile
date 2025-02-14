@@ -10,7 +10,7 @@ WORKDIR /usr/local/tomcat/webapps/
 COPY ${artifact} ROOT.war
 
 # Expose both Tomcat and the Java application ports
-EXPOSE 8080
+EXPOSE 8000
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]

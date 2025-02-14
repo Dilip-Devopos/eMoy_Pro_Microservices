@@ -19,7 +19,7 @@ public class SecurityConfig {
         return http
             .cors(cors -> cors.configurationSource(request -> {
                 var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-                corsConfig.addAllowedOrigin("http://192.168.0.107:3000");
+                corsConfig.addAllowedOrigin("http://localhost:3000");
                 corsConfig.addAllowedHeader("*");
                 corsConfig.addAllowedMethod("*");
                 corsConfig.setAllowCredentials(true);
@@ -41,7 +41,7 @@ public class SecurityConfig {
     
     
     public ReactiveJwtDecoder jwtDecoder() {
-        return ReactiveJwtDecoders.fromIssuerLocation("http://192.168.0.107:8080/realms/Emoy_Pro");
+        return ReactiveJwtDecoders.fromIssuerLocation("http://keycloak-service:8080/realms/Emoy_Pro");
     }
 }
   

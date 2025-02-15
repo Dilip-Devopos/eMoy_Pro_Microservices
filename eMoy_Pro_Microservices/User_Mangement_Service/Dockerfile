@@ -13,7 +13,7 @@ COPY server.xml /usr/local/tomcat/conf/server.xml
 COPY ${artifact} ROOT.war
 
 # Expose both Tomcat and the Java application ports
-EXPOSE 8000
+EXPOSE 8080
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]

@@ -6,9 +6,6 @@ ARG artifact=/target/User_Mangement_Service-0.0.1-SNAPSHOT.war
 # Set working directory
 WORKDIR /usr/local/tomcat/webapps/
 
-# Copy custom server.xml
-COPY server.xml /usr/local/tomcat/conf/server.xml
-
 # Copy WAR file from the local machine to the Tomcat webapps directory
 COPY ${artifact} ROOT.war
 
@@ -16,4 +13,4 @@ COPY ${artifact} ROOT.war
 EXPOSE 8080
 
 # Start Tomcat
-CMD ["catalina.sh", "run"]
+CMD ["catalina.sh", "run"] 

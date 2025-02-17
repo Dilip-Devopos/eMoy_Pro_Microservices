@@ -1,6 +1,6 @@
 FROM tomcat:9-jdk11
 
-ARG artifact=/User_Mangement_Service-0.0.1-SNAPSHOT.war
+ARG artifact=/target/User_Mangement_Service-0.0.1-SNAPSHOT.war
 
 WORKDIR /usr/local/tomcat/webapps/
 

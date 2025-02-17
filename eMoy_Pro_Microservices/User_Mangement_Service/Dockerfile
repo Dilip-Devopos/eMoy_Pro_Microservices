@@ -1,7 +1,7 @@
 FROM openjdk:17-jdk-alpine
 
 # Copy the WAR file from target directory to container
-COPY /User_Mangement_Service-0.0.1-SNAPSHOT.war /app.war
+COPY /target/User_Mangement_Service-0.0.1-SNAPSHOT.war /app.war
 
 # Set the command to run the WAR file
 ENTRYPOINT ["java", "-jar", "/app.war"]

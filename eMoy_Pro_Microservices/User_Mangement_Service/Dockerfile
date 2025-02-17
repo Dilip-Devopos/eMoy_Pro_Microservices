@@ -1,16 +1,14 @@
 FROM tomcat:9-jdk11
 
-# Define the artifact path correctly for Windows
-ARG artifact=/target/User_Mangement_Service-0.0.1-SNAPSHOT.war
+ARG artifact=/User_Mangement_Service-0.0.1-SNAPSHOT.war
 
-# Set working directory
 WORKDIR /usr/local/tomcat/webapps/
 
-# Copy WAR file from the local machine to the Tomcat webapps directory
-COPY ${artifact} ROOT.war
+COPY ${artifact} user_mangement_service.war
 
-# Expose both Tomcat and the Java application ports
-EXPOSE 8080
+# Set Tomcat to listen on port 8000
+RUN sed -i 's/port="8080"/port="8000"/g' /usr/local/tomcat/conf/server.xml
 
-# Start Tomcat
-CMD ["catalina.sh", "run"] 
+EXPOSE 8000
+
+ENTRYPOINT ["catalina.sh", "run"]

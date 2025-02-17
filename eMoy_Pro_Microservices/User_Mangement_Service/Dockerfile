@@ -1,14 +1,10 @@
-FROM tomcat:9-jdk11
+FROM openjdk:17-jdk-alpine
 
-ARG artifact=/target/User_Mangement_Service-0.0.1-SNAPSHOT.war
+# Copy the WAR file from target directory to container
+COPY /User_Mangement_Service-0.0.1-SNAPSHOT.war /app.war
 
-WORKDIR /usr/local/tomcat/webapps/
+# Set the command to run the WAR file
+ENTRYPOINT ["java", "-jar", "/app.war"]
 
-COPY ${artifact} user_mangement_service.war
-
-# Set Tomcat to listen on port 8000
-RUN sed -i 's/port="8080"/port="8000"/g' /usr/local/tomcat/conf/server.xml
-
+# Expose the port that your Spring Boot app will run on (8000)
 EXPOSE 8000
-
-ENTRYPOINT ["catalina.sh", "run"]

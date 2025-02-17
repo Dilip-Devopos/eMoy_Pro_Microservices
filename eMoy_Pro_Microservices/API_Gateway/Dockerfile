@@ -1,16 +1,10 @@
-FROM tomcat:9-jdk11
+FROM openjdk:17-jdk-alpine
 
-# Define the artifact path correctly for Windows
-ARG artifact=/target/API_Gateway-0.0.1-SNAPSHOT.war
+# Copy the WAR file from target directory to container
+COPY /target/API_Gateway-0.0.1-SNAPSHOT.war /app.war
 
-# Set working directory
-WORKDIR /usr/local/tomcat/webapps/
+# Set the command to run the WAR file
+ENTRYPOINT ["java", "-jar", "/app.war"]
 
-# Copy WAR file from the local machine to the Tomcat webapps directory
-COPY ${artifact} ROOT.war
-
-# Expose both Tomcat and the Java application ports
-EXPOSE 8080
-
-# Start Tomcat
-CMD ["catalina.sh", "run"]
+# Expose the port that your Spring Boot app will run on (8765)
+EXPOSE 8765

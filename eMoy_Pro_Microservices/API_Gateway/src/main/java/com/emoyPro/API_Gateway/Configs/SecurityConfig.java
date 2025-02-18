@@ -19,7 +19,7 @@ public class SecurityConfig {
         return http
             .cors(cors -> cors.configurationSource(request -> {
                 var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-                corsConfig.addAllowedOrigin("http://emoy-service:3000");
+                corsConfig.addAllowedOrigin("http://localhost:30008");
                 corsConfig.addAllowedHeader("*");
                 corsConfig.addAllowedMethod("*");
                 corsConfig.setAllowCredentials(true);

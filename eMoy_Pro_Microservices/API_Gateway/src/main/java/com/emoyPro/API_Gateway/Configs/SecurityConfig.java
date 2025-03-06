@@ -41,7 +41,7 @@ public class SecurityConfig {
     
     
     public ReactiveJwtDecoder jwtDecoder() {
-        return ReactiveJwtDecoders.fromIssuerLocation("http://keycloak-service:8080/realms/Emoy_Pro");
+        return ReactiveJwtDecoders.fromIssuerLocation("http://192.168.0.107:3000/realms/Emoy_Pro");
     }
 }
   
